@@ -8,13 +8,13 @@ if (!empty($_POST['username'])) {
   $repasword = trim($_POST['repassword']);
 
   if (!$username) {
-    echo '用户名不能为空';exit;
+    msg(2,'用户名不能为空');
   }
   if (!$password) {
-    echo '密码不能为空';exit;
+    msg(2,'密码不能为空');
   }
   if ($repasword!==$password) {
-    echo '两次密码输入不一致';exit;
+    msg(2,'两次密码输入不一致');
   }
 
   // 数据库操作
@@ -32,7 +32,7 @@ if (!empty($_POST['username'])) {
 
   // 用户已存在数据库
   if (isset($res['total'])&&$res['total']>0) {
-    echo '用户名已存在,请重新输入';exit;
+    msg(2,'用户名已存在,请重新输入');
   }
 
   unset($obj,$res);
@@ -40,17 +40,16 @@ if (!empty($_POST['username'])) {
   // 加密
   $password = createPassword($password);
   if (!$password) {
-    echo '密码加密失败';exit;
+    msg(2,'密码加密失败');
   }
   $sql = "INSERT im_user(username,password,create_time)
           VALUES('{$username}','{$password}','{$_SERVER['REQUEST_TIME']}')";
   $obj = mysql_query($sql);
-  var_dump($obj);
   if ($obj) {
     $userId = mysql_insert_id(); // 插入成功的主键id
-    echo sprintf('注册成功,用户名:%s,用户id:%s',$username,$userId);
-  } else {
-    mysql_error();exit;
+    msg(1,sprintf('注册成功,用户名:%s,用户id:%s',$username,$userId),'login.php');
+  } else
+    msg(2,mysql_error());
   }
 }
 

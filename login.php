@@ -13,10 +13,10 @@ if (!empty($_POST['username'])) {
   $password = trim($_POST['password']);
 
   if (!$username) {
-    echo '用户名不能为空';exit;
+    msg(2,"用户名不能为空");
   }
   if (!$password) {
-    echo '密码不能为空';exit;
+    msg(2,'密码不能为空');
   }
 
   //连接数据库
@@ -31,14 +31,14 @@ if (!empty($_POST['username'])) {
   $res = mysql_fetch_assoc($obj);
 
   if(!$res['total']||$res['total']==0) {
-    echo '该用户未注册';
+    msg(2,'该用户未注册');
   }
 
   if (createPassword($password) === $res['password']) {
     $_SESSION['user']=$res;
-    header('Location: index.php');exit;
+    msg(1,'登录成功','index.php');
   } else {
-    echo '密码错误';exit;
+    msg(2,'密码错误');
   }
 }
 
